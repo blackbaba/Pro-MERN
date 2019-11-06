@@ -10,18 +10,95 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var IssueFilter =
+var initialIssues = [{
+  id: 1,
+  status: "New",
+  owner: "Ravan",
+  effort: 5,
+  created: new Date("2019-08-15"),
+  due: undefined,
+  title: "Error in console when clicking Add"
+}, {
+  id: 2,
+  status: "Assigned",
+  owner: "Eddie",
+  effort: 14,
+  created: new Date("2019-08-16"),
+  due: new Date("2019-09-16"),
+  title: "Missing bottom border on panel"
+}];
+
+var IssueList =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(IssueFilter, _React$Component);
+  _inherits(IssueList, _React$Component);
+
+  function IssueList() {
+    var _this;
+
+    _classCallCheck(this, IssueList);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(IssueList).call(this));
+    _this.state = {
+      issues: []
+    };
+    _this.createIssue = _this.createIssue.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(IssueList, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadData();
+    }
+  }, {
+    key: "loadData",
+    value: function loadData() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        _this2.setState({
+          issues: initialIssues
+        });
+      }, 500);
+    }
+  }, {
+    key: "createIssue",
+    value: function createIssue(issue) {
+      issue.id = this.state.issues.length + 1;
+      issue.created = new Date();
+      var newIssueList = this.state.issues.slice();
+      newIssueList.push(issue);
+      this.setState({
+        issues: newIssueList
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement(React.Fragment, null, React.createElement("h1", null, "Issue Tracker"), React.createElement(IssueFilter, null), React.createElement("hr", null), React.createElement(IssueTable, {
+        issues: this.state.issues
+      }), React.createElement("hr", null), React.createElement(IssueAdd, {
+        createIssue: this.createIssue
+      }));
+    }
+  }]);
+
+  return IssueList;
+}(React.Component);
+
+var IssueFilter =
+/*#__PURE__*/
+function (_React$Component2) {
+  _inherits(IssueFilter, _React$Component2);
 
   function IssueFilter() {
     _classCallCheck(this, IssueFilter);
@@ -41,8 +118,8 @@ function (_React$Component) {
 
 var IssueTable =
 /*#__PURE__*/
-function (_React$Component2) {
-  _inherits(IssueTable, _React$Component2);
+function (_React$Component3) {
+  _inherits(IssueTable, _React$Component3);
 
   function IssueTable() {
     _classCallCheck(this, IssueTable);
@@ -53,27 +130,15 @@ function (_React$Component2) {
   _createClass(IssueTable, [{
     key: "render",
     value: function render() {
-      var rowStyle = {
-        border: "1px solid silver",
-        padding: 4
-      };
+      var issueRows = this.props.issues.map(function (issue) {
+        return React.createElement(IssueRow, {
+          key: issue.id,
+          issue: issue
+        });
+      });
       return React.createElement("table", {
-        style: {
-          borderCollapse: "collapse"
-        }
-      }, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", {
-        style: rowStyle
-      }, "ID"), React.createElement("th", {
-        style: rowStyle
-      }, "Title"))), React.createElement("tbody", null, React.createElement(IssueRow, {
-        rowStyle: rowStyle,
-        issue_id: 1,
-        issue_title: "Error in console when clicking Add"
-      }), React.createElement(IssueRow, {
-        rowStyle: rowStyle,
-        issue_id: 2,
-        issue_title: "Missing bottom border on panel"
-      })));
+        className: "bordered-table"
+      }, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", null, "ID"), React.createElement("th", null, "Status"), React.createElement("th", null, "Owner"), React.createElement("th", null, "Created"), React.createElement("th", null, "Effort"), React.createElement("th", null, "Due Date"), React.createElement("th", null, "Title"))), React.createElement("tbody", null, issueRows));
     }
   }]);
 
@@ -82,8 +147,8 @@ function (_React$Component2) {
 
 var IssueRow =
 /*#__PURE__*/
-function (_React$Component3) {
-  _inherits(IssueRow, _React$Component3);
+function (_React$Component4) {
+  _inherits(IssueRow, _React$Component4);
 
   function IssueRow() {
     _classCallCheck(this, IssueRow);
@@ -94,12 +159,8 @@ function (_React$Component3) {
   _createClass(IssueRow, [{
     key: "render",
     value: function render() {
-      var style = this.props.rowStyle;
-      return React.createElement("tr", null, React.createElement("td", {
-        style: style
-      }, this.props.issue_id), React.createElement("td", {
-        style: style
-      }, this.props.issue_title));
+      var issue = this.props.issue;
+      return React.createElement("tr", null, React.createElement("td", null, issue.id), React.createElement("td", null, issue.status), React.createElement("td", null, issue.owner), React.createElement("td", null, issue.created.toDateString()), React.createElement("td", null, issue.effort), React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), React.createElement("td", null, issue.title));
     }
   }]);
 
@@ -108,44 +169,52 @@ function (_React$Component3) {
 
 var IssueAdd =
 /*#__PURE__*/
-function (_React$Component4) {
-  _inherits(IssueAdd, _React$Component4);
+function (_React$Component5) {
+  _inherits(IssueAdd, _React$Component5);
 
   function IssueAdd() {
+    var _this3;
+
     _classCallCheck(this, IssueAdd);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(IssueAdd).apply(this, arguments));
+    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(IssueAdd).call(this));
+    _this3.handleSubmit = _this3.handleSubmit.bind(_assertThisInitialized(_this3));
+    return _this3;
   }
 
   _createClass(IssueAdd, [{
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      var form = document.forms.issueAdd;
+      var issue = {
+        owner: form.owner.value,
+        title: form.title.value,
+        status: "New"
+      };
+      this.props.createIssue(issue);
+      form.owner.value = "";
+      form.title.value = "";
+    }
+  }, {
     key: "render",
     value: function render() {
-      return React.createElement("div", null, "Placeholder for Issue Add");
+      return React.createElement("form", {
+        name: "issueAdd",
+        onSubmit: this.handleSubmit
+      }, React.createElement("input", {
+        type: "text",
+        name: "owner",
+        placeholder: "Owner"
+      }), React.createElement("input", {
+        type: "text",
+        name: "title",
+        placeholder: "Title"
+      }), React.createElement("button", null, "Add"));
     }
   }]);
 
   return IssueAdd;
-}(React.Component);
-
-var IssueList =
-/*#__PURE__*/
-function (_React$Component5) {
-  _inherits(IssueList, _React$Component5);
-
-  function IssueList() {
-    _classCallCheck(this, IssueList);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(IssueList).apply(this, arguments));
-  }
-
-  _createClass(IssueList, [{
-    key: "render",
-    value: function render() {
-      return React.createElement(React.Fragment, null, React.createElement("h1", null, "Issue Tracker"), React.createElement(IssueFilter, null), React.createElement("hr", null), React.createElement(IssueTable, null), React.createElement("hr", null), React.createElement(IssueAdd, null));
-    }
-  }]);
-
-  return IssueList;
 }(React.Component);
 
 var element = React.createElement(IssueList, null);
