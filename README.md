@@ -2,6 +2,17 @@
 
 ## Project - Issue Tracker
 
+**Instructions**
+
+```javascript
+// Step 1 - Install Node modules
+npm install 
+
+// Step 2 - Start Issue Tracker
+npm start 
+
+```
+
 **Key Features**
 
 - The user is able to view a list of issues, with an ability to filter the list by various parameters.
