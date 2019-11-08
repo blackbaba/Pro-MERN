@@ -4,14 +4,9 @@
 
 **Instructions**
 
-```javascript
-// Step 1 - Install Node modules
-npm install 
-
-// Step 2 - Start Issue Tracker
-npm start 
-
-```
+1. Install Node modules :  `npm install`
+2. Start Babel Transpiler : `npm run watch`
+3. Start Issue Tracker :  `npm start`
 
 **Key Features**
 
@@ -31,3 +26,4 @@ _An issue has the following attributes:_
 - Estimated completion date or due date (a date, optional)
 
 ---
+
