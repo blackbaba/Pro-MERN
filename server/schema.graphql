@@ -1,7 +1,7 @@
 input IssueInputs {
   title: String!
   "Optional, if not supplied - will be let to 'New'"
-  status: String
+  status: StatusType = New
   owner: String
   effort: Int
   due: GraphQLDate
@@ -9,6 +9,13 @@ input IssueInputs {
 
 # Top level declarations
 scalar GraphQLDate
+
+enum StatusType {
+  New
+  Assigned
+  Fixed
+  Closed
+}
 
 type Query {
   about: String!
@@ -23,7 +30,7 @@ type Mutation {
 type Issue {
   id: Int!
   title: String!
-  status: String!
+  status: StatusType!
   owner: String
   effort: Int
   created: GraphQLDate!

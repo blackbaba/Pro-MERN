@@ -2,10 +2,6 @@
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -22,12 +18,86 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 // React Application
 var dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
 
 function jsonDateReviver(key, value) {
   if (dateRegex.test(value)) return new Date(value);
   return value;
+}
+
+function graphQLFetch(_x) {
+  return _graphQLFetch.apply(this, arguments);
+}
+
+function _graphQLFetch() {
+  _graphQLFetch = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee3(query) {
+    var variables,
+        response,
+        body,
+        result,
+        error,
+        details,
+        _args3 = arguments;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            variables = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+            _context3.prev = 1;
+            _context3.next = 4;
+            return fetch("/graphql", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                query: query,
+                variables: variables
+              })
+            });
+
+          case 4:
+            response = _context3.sent;
+            _context3.next = 7;
+            return response.text();
+
+          case 7:
+            body = _context3.sent;
+            result = JSON.parse(body, jsonDateReviver);
+
+            if (result.errors) {
+              error = result.errors[0];
+
+              if (error.extensions.code == "BAD_USER_INPUT") {
+                details = error.extensions.exception.errors.join("\n ");
+                alert("".concat(error.message, ":\n ").concat(details));
+              } else {
+                alert("".concat(error.extensions.code, ": ").concat(error.message));
+              }
+            }
+
+            return _context3.abrupt("return", result.data);
+
+          case 13:
+            _context3.prev = 13;
+            _context3.t0 = _context3["catch"](1);
+            alert("Error in sending data to server: ".concat(_context3.t0.message));
+
+          case 16:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[1, 13]]);
+  }));
+  return _graphQLFetch.apply(this, arguments);
 }
 
 var IssueList =
@@ -59,36 +129,25 @@ function (_React$Component) {
       var _loadData = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var query, response, body, result;
+        var query, data;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 query = " query {\n      issueList {id title status owner created effort due}\n    }";
                 _context.next = 3;
-                return fetch("/graphql", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                    query: query
-                  })
-                });
+                return graphQLFetch(query);
 
               case 3:
-                response = _context.sent;
-                _context.next = 6;
-                return response.text();
+                data = _context.sent;
 
-              case 6:
-                body = _context.sent;
-                result = JSON.parse(body, jsonDateReviver);
-                this.setState({
-                  issues: result.data.issueList
-                });
+                if (data) {
+                  this.setState({
+                    issues: data.issueList
+                  });
+                }
 
-              case 9:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -108,26 +167,23 @@ function (_React$Component) {
       var _createIssue = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2(issue) {
-        var query, response;
+        var query, data;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 query = "mutation {\n     issueAdd(issue:{\n      title: \"".concat(issue.title, "\",\n      owner: \"").concat(issue.owner, "\",\n      due: \"").concat(issue.due.toISOString(), "\",\n      }) {\n      id\n      }\n      }");
                 _context2.next = 3;
-                return fetch("/graphql", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                    query: query
-                  })
+                return graphQLFetch(query, {
+                  issue: issue
                 });
 
               case 3:
-                response = _context2.sent;
-                this.loadData();
+                data = _context2.sent;
+
+                if (data) {
+                  this.loadData();
+                }
 
               case 5:
               case "end":
@@ -137,7 +193,7 @@ function (_React$Component) {
         }, _callee2, this);
       }));
 
-      function createIssue(_x) {
+      function createIssue(_x2) {
         return _createIssue.apply(this, arguments);
       }
 
