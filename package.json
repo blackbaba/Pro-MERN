@@ -27,6 +27,7 @@
     "apollo-server-express": "^2.9.7",
     "express": "^4.17.1",
     "graphql": "^0.13.2",
+    "mongodb": "^3.3.4",
     "nodemon": "^1.19.4"
   },
   "devDependencies": {

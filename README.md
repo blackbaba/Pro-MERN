@@ -4,9 +4,14 @@
 
 **Instructions**
 
-1. Install Node modules :  `npm install`
+1. Install Node modules : `npm install`
 2. Start Babel Transpiler : `npm run watch`
-3. Start Issue Tracker :  `npm start`
+3. Start Issue Tracker : `npm start`
+
+**Technology Stack**
+
+* MERN - MongoDB, Express, React, Node
+* Other - GraphQL
 
 **Key Features**
 
@@ -26,4 +31,3 @@ _An issue has the following attributes:_
 - Estimated completion date or due date (a date, optional)
 
 ---
-
