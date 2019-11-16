@@ -1,6 +1,4 @@
-# Exercises and Project Work for _Pro-MERN_ Textbook
-
-## Project - Issue Tracker
+# Project - Issue Tracker
 
 **Instructions**
 
@@ -10,8 +8,8 @@
 
 **Technology Stack**
 
-* MERN - MongoDB, Express, React, Node
-* Other - GraphQL
+- MERN - MongoDB, Express, React, Node
+- Other - GraphQL
 
 **Key Features**
 
