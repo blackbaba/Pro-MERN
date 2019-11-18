@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon -w uiserver.js uiserver.js",
     "compile": "babel src --out-dir public",
-    "watch": "babel src --out-dir public --watch --verbose"
+    "watch": "babel src --out-dir public --watch --verbose",
+    "lint": "eslint . --ext js,jsx --ignore-pattern public"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,8 @@
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.16.0"
+    "eslint-plugin-react": "^7.16.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   }
 }
