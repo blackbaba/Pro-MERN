@@ -1,5 +1,9 @@
 "use strict";
 
+var _graphQLFetch = _interopRequireDefault(require("./graphQLFetch"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17,75 +21,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-// React Application
-var dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
-
-function jsonDateReviver(key, value) {
-  if (dateRegex.test(value)) return new Date(value);
-  return value;
-}
-
-function graphQLFetch(query) {
-  var variables,
-      response,
-      body,
-      result,
-      error,
-      details,
-      _args = arguments;
-  return regeneratorRuntime.async(function graphQLFetch$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          variables = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-          _context.prev = 1;
-          _context.next = 4;
-          return regeneratorRuntime.awrap(fetch("http://localhost:3000/graphql", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              query: query,
-              variables: variables
-            })
-          }));
-
-        case 4:
-          response = _context.sent;
-          _context.next = 7;
-          return regeneratorRuntime.awrap(response.text());
-
-        case 7:
-          body = _context.sent;
-          result = JSON.parse(body, jsonDateReviver);
-
-          if (result.errors) {
-            error = result.errors[0];
-
-            if (error.extensions.code == "BAD_USER_INPUT") {
-              details = error.extensions.exception.errors.join("\n ");
-              alert("".concat(error.message, ":\n ").concat(details));
-            } else {
-              alert("".concat(error.extensions.code, ": ").concat(error.message));
-            }
-          }
-
-          return _context.abrupt("return", result.data);
-
-        case 13:
-          _context.prev = 13;
-          _context.t0 = _context["catch"](1);
-          alert("Error in sending data to server: ".concat(_context.t0.message));
-
-        case 16:
-        case "end":
-          return _context.stop();
-      }
-    }
-  }, null, null, [[1, 13]]);
-}
 
 var IssueList =
 /*#__PURE__*/
@@ -114,16 +49,16 @@ function (_React$Component) {
     key: "loadData",
     value: function loadData() {
       var query, data;
-      return regeneratorRuntime.async(function loadData$(_context2) {
+      return regeneratorRuntime.async(function loadData$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
               query = " query {\n      issueList {id title status owner created effort due}\n    }";
-              _context2.next = 3;
-              return regeneratorRuntime.awrap(graphQLFetch(query));
+              _context.next = 3;
+              return regeneratorRuntime.awrap((0, _graphQLFetch.default)(query));
 
             case 3:
-              data = _context2.sent;
+              data = _context.sent;
 
               if (data) {
                 this.setState({
@@ -133,7 +68,7 @@ function (_React$Component) {
 
             case 5:
             case "end":
-              return _context2.stop();
+              return _context.stop();
           }
         }
       }, null, this);
@@ -142,18 +77,18 @@ function (_React$Component) {
     key: "createIssue",
     value: function createIssue(issue) {
       var query, data;
-      return regeneratorRuntime.async(function createIssue$(_context3) {
+      return regeneratorRuntime.async(function createIssue$(_context2) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               query = "mutation {\n     issueAdd(issue:{\n      title: \"".concat(issue.title, "\",\n      owner: \"").concat(issue.owner, "\",\n      due: \"").concat(issue.due.toISOString(), "\",\n      }) {\n      id\n      }\n      }");
-              _context3.next = 3;
-              return regeneratorRuntime.awrap(graphQLFetch(query, {
+              _context2.next = 3;
+              return regeneratorRuntime.awrap((0, _graphQLFetch.default)(query, {
                 issue: issue
               }));
 
             case 3:
-              data = _context3.sent;
+              data = _context2.sent;
 
               if (data) {
                 this.loadData();
@@ -161,7 +96,7 @@ function (_React$Component) {
 
             case 5:
             case "end":
-              return _context3.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
