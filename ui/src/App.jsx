@@ -3,9 +3,16 @@ import "babel-polyfill";
 import "whatwg-fetch";
 import React from "react";
 import ReactDOM from "react-dom";
-import IssueList from "./IssueList.jsx";
+import { HashRouter as Router } from "react-router-dom";
 
-const element = <IssueList />;
+import Page from "./Page.jsx";
+
+const element = (
+  <Router>
+    <Page />
+  </Router>
+);
+
 ReactDOM.render(element, document.getElementById("contents"));
 
 if (module.hot) {
